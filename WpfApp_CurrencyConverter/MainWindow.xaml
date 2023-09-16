@@ -15,11 +15,14 @@
         <StackPanel Orientation="Vertical">
             <ComboBox Grid.Row="0"
                   ItemsSource="{Binding CurrencyNames}"
-                  SelectedItem="{Binding OriginCurrensy, Mode=OneWay}"/>
+                  SelectedItem="{Binding OriginCurrensy, Mode=OneWayToSource}"/>
             
             <ComboBox Grid.Row="0"
                   ItemsSource="{Binding CurrencyNames}"
-                  SelectedItem="{Binding CurrensyToConvert, Mode=OneWay}"/>
+                  SelectedItem="{Binding CurrensyToConvert, Mode=OneWayToSource}"/>
+
+            <TextBlock Text="{Binding OriginCurrensy}" Background="AliceBlue"/>
+            <TextBlock Text="{Binding CurrensyToConvert}" Background="AliceBlue"/>
         </StackPanel>
 
     </Grid>

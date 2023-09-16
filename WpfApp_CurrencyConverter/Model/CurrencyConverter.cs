@@ -14,9 +14,9 @@ namespace WpfApp_CurrencyConverter
         private string shortHref = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date=";
         private string fullHref = string.Empty;
         public ObservableCollection<Currency> Currencies { get; private set; } = new ObservableCollection<Currency>();
-        public ObservableCollection<string> CurrencyNames { get; private set; } = new ObservableCollection<string>() { "UAH", "USD", "EUR", "JPY", "YAN"};
-        public string OriginCurrensy { get; set; }
-        public string CurrensyToConvert { get; set; }
+        public ObservableCollection<string> CurrencyNames { get; private set; } = new ObservableCollection<string>();
+        public string FirstCurrency { get; set; }
+        public string SecondCurrency { get; set; }
 
         private DateTime date;
         public DateTime Date
@@ -27,6 +27,7 @@ namespace WpfApp_CurrencyConverter
                 date = value;
                 fullHref = shortHref + date.ToString("yyyyMMdd") + "&json";
                 LoadCurrencies();
+                InitCurrencyNamesList();
             }
         }
 
@@ -44,6 +45,14 @@ namespace WpfApp_CurrencyConverter
             if (currencies != null)
             {
                 Currencies = new ObservableCollection<Currency>(currencies);
+            }
+        }
+        private void InitCurrencyNamesList()
+        {
+            var currencyNames = Currencies.Select(c => c.txt).ToList();
+            if (currencyNames != null)
+            {
+                CurrencyNames = new ObservableCollection<string>(currencyNames);
             }
         }
     }
