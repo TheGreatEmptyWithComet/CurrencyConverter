@@ -15,8 +15,37 @@ namespace WpfApp_CurrencyConverter
         private string fullHref = string.Empty;
         public ObservableCollection<Currency> Currencies { get; private set; } = new ObservableCollection<Currency>();
         public ObservableCollection<string> CurrencyNames { get; private set; } = new ObservableCollection<string>();
-        public string FirstCurrency { get; set; }
-        public string SecondCurrency { get; set; }
+        public string FirstCurrencyName { get; set; }
+        public string SecondCurrencyName { get; set; }
+
+        private double firstCurrencyValue;
+        public double FirstCurrencyValue
+        {
+            get { return firstCurrencyValue; }
+            set
+            {
+                if (firstCurrencyValue != value)
+                {
+                    firstCurrencyValue = value;
+                    OnPropertyChanged(nameof(FirstCurrencyValue));
+                    SetSecondCurrencyValue();
+                }
+            }
+        }
+        private double secondCurrencyValue;
+        public double SecondCurrencyValue
+        {
+            get { return secondCurrencyValue; }
+            set
+            {
+                if (secondCurrencyValue != value)
+                {
+                    secondCurrencyValue = value;
+                    OnPropertyChanged(nameof(SecondCurrencyValue));
+                    SetFirstCurrencyValue();
+                }
+            }
+        }
 
         private DateTime date;
         public DateTime Date
@@ -46,6 +75,9 @@ namespace WpfApp_CurrencyConverter
             {
                 Currencies = new ObservableCollection<Currency>(currencies);
             }
+
+            // Add UAH currency to the list
+            Currencies.Add(new Currency() { r030 = 980, txt = "Українська гривня", rate = 1, cc = "UAH", exchangedate = Date.ToString("d") });
         }
         private void InitCurrencyNamesList()
         {
@@ -53,6 +85,26 @@ namespace WpfApp_CurrencyConverter
             if (currencyNames != null)
             {
                 CurrencyNames = new ObservableCollection<string>(currencyNames);
+            }
+        }
+        private void SetSecondCurrencyValue()
+        {
+            var firstCurrencyRate = Currencies.Where(c => c.txt == FirstCurrencyName).Select(c => c.rate).FirstOrDefault();
+            var secondCurrencyRate = Currencies.Where(c => c.txt == SecondCurrencyName).Select(c => c.rate).FirstOrDefault();
+
+            if (secondCurrencyRate != 0)
+            {
+                SecondCurrencyValue = firstCurrencyValue * firstCurrencyRate / secondCurrencyRate;
+            }
+        }
+        private void SetFirstCurrencyValue()
+        {
+            var firstCurrencyRate = Currencies.Where(c => c.txt == FirstCurrencyName).Select(c => c.rate).FirstOrDefault();
+            var secondCurrencyRate = Currencies.Where(c => c.txt == SecondCurrencyName).Select(c => c.rate).FirstOrDefault();
+
+            if (firstCurrencyRate != 0)
+            {
+                FirstCurrencyValue = secondCurrencyValue * secondCurrencyRate / firstCurrencyRate;
             }
         }
     }
