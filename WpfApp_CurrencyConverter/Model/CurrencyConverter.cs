@@ -60,11 +60,11 @@ namespace WpfApp_CurrencyConverter
             }
         }
 
-
         public CurrencyConverter()
         {
             Date = DateTime.Now;
         }
+
         private void LoadCurrencies()
         {
             WebClient webClient = new WebClient();

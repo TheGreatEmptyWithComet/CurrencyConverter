@@ -6,23 +6,44 @@
         xmlns:local="clr-namespace:WpfApp_CurrencyConverter"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="350">
+    <Window.Resources>
+        <Style TargetType="{x:Type TextBox}" x:Key="Style_CurrencyValueTextBox">
+            <Setter Property="Width" Value="100"/>
+        </Style>
+
+        <Style TargetType="{x:Type ComboBox}" x:Key="Style_CurrencyNameComboBox">
+            <Setter Property="Width" Value="200"/>
+        </Style>
+
+
+    </Window.Resources>
+
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="29*"/>
-            <RowDefinition Height="33*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="80*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Vertical">
-            <ComboBox Grid.Row="0"
-                  ItemsSource="{Binding CurrencyNames}"
-                  SelectedItem="{Binding OriginCurrensy, Mode=OneWayToSource}"/>
-            
-            <ComboBox Grid.Row="0"
-                  ItemsSource="{Binding CurrencyNames}"
-                  SelectedItem="{Binding CurrensyToConvert, Mode=OneWayToSource}"/>
+        <StackPanel Orientation="Vertical" Grid.Row="0">
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="{Binding FirstCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='0.00'}"
+                         Style="{DynamicResource Style_CurrencyValueTextBox}"/>
 
-            <TextBlock Text="{Binding OriginCurrensy}" Background="AliceBlue"/>
-            <TextBlock Text="{Binding CurrensyToConvert}" Background="AliceBlue"/>
+                <ComboBox ItemsSource="{Binding CurrencyNames}"
+                          SelectedItem="{Binding FirstCurrencyName, Mode=OneWayToSource}"
+                          Style="{DynamicResource Style_CurrencyNameComboBox}"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="{Binding SecondCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='0.00'}"
+                         Style="{DynamicResource Style_CurrencyValueTextBox}"/>
+
+                <ComboBox ItemsSource="{Binding CurrencyNames}"
+                          SelectedItem="{Binding SecondCurrencyName, Mode=OneWayToSource}"
+                          Style="{DynamicResource Style_CurrencyNameComboBox}"/>
+            </StackPanel>
+
         </StackPanel>
 
     </Grid>
