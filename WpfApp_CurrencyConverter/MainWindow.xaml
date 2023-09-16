@@ -5,8 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp_CurrencyConverter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="350">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="29*"/>
+            <RowDefinition Height="33*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical">
+            <ComboBox Grid.Row="0"
+                  ItemsSource="{Binding CurrencyNames}"
+                  SelectedItem="{Binding OriginCurrensy, Mode=OneWay}"/>
+            
+            <ComboBox Grid.Row="0"
+                  ItemsSource="{Binding CurrencyNames}"
+                  SelectedItem="{Binding CurrensyToConvert, Mode=OneWay}"/>
+        </StackPanel>
 
     </Grid>
 </Window>
