@@ -9,14 +9,41 @@ using Newtonsoft.Json;
 
 namespace WpfApp_CurrencyConverter
 {
-    public class CurrencyConverter : NotifyPropertyChangedHandler
+    public class CurrencyConverterVM : NotifyPropertyChangedHandler
     {
         private string shortHref = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date=";
         private string fullHref = string.Empty;
         public ObservableCollection<Currency> Currencies { get; private set; } = new ObservableCollection<Currency>();
         public ObservableCollection<string> CurrencyNames { get; private set; } = new ObservableCollection<string>();
-        public string FirstCurrencyName { get; set; }
-        public string SecondCurrencyName { get; set; }
+        
+        private string firstCurrencyName; 
+        public string FirstCurrencyName
+        {
+            get { return firstCurrencyName; }
+            set
+            {
+                if (firstCurrencyName != value)
+                {
+                    firstCurrencyName = value;
+                    // Calculate opposit currency value if current currency is changed
+                    SetSecondCurrencyValue();
+                }
+            }
+        }
+        private string secondCurrencyName;
+        public string SecondCurrencyName
+        {
+            get { return secondCurrencyName; }
+            set
+            {
+                if (secondCurrencyName != value)
+                {
+                    secondCurrencyName = value;
+                    // Calculate opposit currency value if current currency is changed
+                    SetFirstCurrencyValue();
+                }
+            }
+        }
 
         private double firstCurrencyValue;
         public double FirstCurrencyValue
@@ -60,7 +87,7 @@ namespace WpfApp_CurrencyConverter
             }
         }
 
-        public CurrencyConverter()
+        public CurrencyConverterVM()
         {
             Date = DateTime.Now;
         }
@@ -81,7 +108,7 @@ namespace WpfApp_CurrencyConverter
         }
         private void InitCurrencyNamesList()
         {
-            var currencyNames = Currencies.Select(c => c.txt).ToList();
+            var currencyNames = Currencies.OrderBy(c=>c.txt).Select(c => c.txt).ToList();
             if (currencyNames != null)
             {
                 CurrencyNames = new ObservableCollection<string>(currencyNames);

@@ -23,7 +23,7 @@ namespace WpfApp_CurrencyConverter
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new CurrencyConverter();
+            DataContext = new CurrencyConverterVM();
         }
     }
 }

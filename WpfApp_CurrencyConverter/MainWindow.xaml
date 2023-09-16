@@ -27,7 +27,7 @@
 
         <StackPanel Orientation="Vertical" Grid.Row="0">
             <StackPanel Orientation="Horizontal">
-                <TextBox Text="{Binding FirstCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='0.00'}"
+                <TextBox Text="{Binding FirstCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='0.##'}"
                          Style="{DynamicResource Style_CurrencyValueTextBox}"/>
 
                 <ComboBox ItemsSource="{Binding CurrencyNames}"
@@ -36,7 +36,7 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
-                <TextBox Text="{Binding SecondCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='0.00'}"
+                <TextBox Text="{Binding SecondCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='0.##'}"
                          Style="{DynamicResource Style_CurrencyValueTextBox}"/>
 
                 <ComboBox ItemsSource="{Binding CurrencyNames}"
