@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp_CurrencyConverter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="350">
+        Title="MainWindow" Height="500" Width="400">
     <Window.Resources>
         <Style TargetType="{x:Type TextBox}" x:Key="Style_CurrencyValueTextBox">
             <Setter Property="Width" Value="100"/>
@@ -14,8 +14,6 @@
         <Style TargetType="{x:Type ComboBox}" x:Key="Style_CurrencyNameComboBox">
             <Setter Property="Width" Value="200"/>
         </Style>
-
-
     </Window.Resources>
 
 
@@ -26,9 +24,13 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Vertical" Grid.Row="0">
+            <DatePicker SelectedDate="{Binding Date, Mode=TwoWay}"
+                        SelectedDateFormat="Short"
+                        Width="100"/>
             <StackPanel Orientation="Horizontal">
                 <TextBox Text="{Binding FirstCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Style="{DynamicResource Style_CurrencyValueTextBox}"/>
+
 
                 <ComboBox ItemsSource="{Binding CurrencyNames}"
                           SelectedItem="{Binding FirstCurrencyName, Mode=OneWayToSource}"
@@ -38,15 +40,43 @@
 
             <StackPanel Orientation="Horizontal">
                 <TextBox Text="{Binding SecondCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{DynamicResource Style_CurrencyValueTextBox}"/>
+                         Style="{DynamicResource Style_CurrencyValueTextBox}"
+                         x:Name="SecondCurrency_TextBox"
+                         GotKeyboardFocus="SecondCurrency_TextBox_GotKeyboardFocus"
+                         LostKeyboardFocus="SecondCurrency_TextBox_LostKeyboardFocus"/>
 
                 <ComboBox ItemsSource="{Binding CurrencyNames}"
                           SelectedItem="{Binding SecondCurrencyName, Mode=OneWayToSource}"
                           Style="{DynamicResource Style_CurrencyNameComboBox}"
                           SelectedValue="Євро"/>
             </StackPanel>
-
         </StackPanel>
+        
+        <!--<ListView ItemsSource="{Binding Currencies}"
+                     Grid.Row="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Code" DisplayMemberBinding ="{Binding r030}" />
+                    <GridViewColumn Header="Title" DisplayMemberBinding ="{Binding txt}" />
+                    <GridViewColumn Header="Rate" DisplayMemberBinding ="{Binding rate}" />
+                    <GridViewColumn Header="Short name" DisplayMemberBinding ="{Binding cc}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>-->
 
+        <DataGrid ItemsSource="{Binding Currencies}" AutoGenerateColumns="False"
+                  Grid.Row="1"
+                  IsReadOnly="True"
+                  HorizontalGridLinesBrush="Azure"
+                  VerticalGridLinesBrush="Azure"
+                  HeadersVisibility="Column">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Code" Binding="{Binding r030}"/>
+                <DataGridTextColumn Header="Title" Binding="{Binding txt}" Width="*"/>
+                <DataGridTextColumn Header="Rate" Binding="{Binding rate}"/>
+                <DataGridTextColumn Header="Short" Binding="{Binding cc}"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

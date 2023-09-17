@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 
 namespace WpfApp_CurrencyConverter
@@ -13,10 +15,14 @@ namespace WpfApp_CurrencyConverter
     {
         private string shortHref = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date=";
         private string fullHref = string.Empty;
+        private bool secondCurrencyValueIsEdited = false;
         public ObservableCollection<Currency> Currencies { get; private set; } = new ObservableCollection<Currency>();
         public ObservableCollection<string> CurrencyNames { get; private set; } = new ObservableCollection<string>();
-        
-        private string firstCurrencyName; 
+
+        public ICommand SetSecondCurrencyValueIsEdited;
+        public ICommand UnsetSecondCurrencyValueIsEdited;
+
+        private string firstCurrencyName;
         public string FirstCurrencyName
         {
             get { return firstCurrencyName; }
@@ -39,8 +45,8 @@ namespace WpfApp_CurrencyConverter
                 if (secondCurrencyName != value)
                 {
                     secondCurrencyName = value;
-                    // Calculate opposit currency value if current currency is changed
-                    SetFirstCurrencyValue();
+                    // Calculate currency value if currency is changed
+                    SetSecondCurrencyValue();
                 }
             }
         }
@@ -69,7 +75,10 @@ namespace WpfApp_CurrencyConverter
                 {
                     secondCurrencyValue = value;
                     OnPropertyChanged(nameof(SecondCurrencyValue));
-                    SetFirstCurrencyValue();
+                    if (secondCurrencyValueIsEdited)
+                    {
+                        SetFirstCurrencyValue();
+                    }
                 }
             }
         }
@@ -83,13 +92,17 @@ namespace WpfApp_CurrencyConverter
                 date = value;
                 fullHref = shortHref + date.ToString("yyyyMMdd") + "&json";
                 LoadCurrencies();
+                OnPropertyChanged(nameof(Currencies));
                 InitCurrencyNamesList();
+                SetSecondCurrencyValue();
             }
         }
 
         public CurrencyConverterVM()
         {
             Date = DateTime.Now;
+            SetSecondCurrencyValueIsEdited = new RelayCommand(() => { secondCurrencyValueIsEdited = true; });
+            UnsetSecondCurrencyValueIsEdited = new RelayCommand(() => { secondCurrencyValueIsEdited = false; });
         }
 
         private void LoadCurrencies()
@@ -108,7 +121,7 @@ namespace WpfApp_CurrencyConverter
         }
         private void InitCurrencyNamesList()
         {
-            var currencyNames = Currencies.OrderBy(c=>c.txt).Select(c => c.txt).ToList();
+            var currencyNames = Currencies.OrderBy(c => c.txt).Select(c => c.txt).ToList();
             if (currencyNames != null)
             {
                 CurrencyNames = new ObservableCollection<string>(currencyNames);

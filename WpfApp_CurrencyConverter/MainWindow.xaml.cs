@@ -20,10 +20,21 @@ namespace WpfApp_CurrencyConverter
     /// </summary>
     public partial class MainWindow : Window
     {
+        CurrencyConverterVM currencyConverterVM = new CurrencyConverterVM();
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new CurrencyConverterVM();
+            DataContext = currencyConverterVM;
+        }
+
+        private void SecondCurrency_TextBox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            currencyConverterVM.SetSecondCurrencyValueIsEdited.Execute(null);
+        }
+
+        private void SecondCurrency_TextBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            currencyConverterVM.UnsetSecondCurrencyValueIsEdited.Execute(null);
         }
     }
 }
