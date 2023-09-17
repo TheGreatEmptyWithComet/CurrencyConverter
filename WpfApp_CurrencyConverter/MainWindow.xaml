@@ -27,21 +27,23 @@
 
         <StackPanel Orientation="Vertical" Grid.Row="0">
             <StackPanel Orientation="Horizontal">
-                <TextBox Text="{Binding FirstCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='0.##'}"
+                <TextBox Text="{Binding FirstCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Style="{DynamicResource Style_CurrencyValueTextBox}"/>
 
                 <ComboBox ItemsSource="{Binding CurrencyNames}"
                           SelectedItem="{Binding FirstCurrencyName, Mode=OneWayToSource}"
-                          Style="{DynamicResource Style_CurrencyNameComboBox}"/>
+                          Style="{DynamicResource Style_CurrencyNameComboBox}"
+                          SelectedValue="Українська гривня"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
-                <TextBox Text="{Binding SecondCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='0.##'}"
+                <TextBox Text="{Binding SecondCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Style="{DynamicResource Style_CurrencyValueTextBox}"/>
 
                 <ComboBox ItemsSource="{Binding CurrencyNames}"
                           SelectedItem="{Binding SecondCurrencyName, Mode=OneWayToSource}"
-                          Style="{DynamicResource Style_CurrencyNameComboBox}"/>
+                          Style="{DynamicResource Style_CurrencyNameComboBox}"
+                          SelectedValue="Євро"/>
             </StackPanel>
 
         </StackPanel>

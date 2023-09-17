@@ -45,8 +45,8 @@ namespace WpfApp_CurrencyConverter
             }
         }
 
-        private double firstCurrencyValue;
-        public double FirstCurrencyValue
+        private string firstCurrencyValue;
+        public string FirstCurrencyValue
         {
             get { return firstCurrencyValue; }
             set
@@ -59,8 +59,8 @@ namespace WpfApp_CurrencyConverter
                 }
             }
         }
-        private double secondCurrencyValue;
-        public double SecondCurrencyValue
+        private string secondCurrencyValue;
+        public string SecondCurrencyValue
         {
             get { return secondCurrencyValue; }
             set
@@ -119,9 +119,13 @@ namespace WpfApp_CurrencyConverter
             var firstCurrencyRate = Currencies.Where(c => c.txt == FirstCurrencyName).Select(c => c.rate).FirstOrDefault();
             var secondCurrencyRate = Currencies.Where(c => c.txt == SecondCurrencyName).Select(c => c.rate).FirstOrDefault();
 
-            if (secondCurrencyRate != 0)
+            if (secondCurrencyRate != 0 && double.TryParse(FirstCurrencyValue, out double firstCurrencyValue))
             {
-                SecondCurrencyValue = firstCurrencyValue * firstCurrencyRate / secondCurrencyRate;
+                SecondCurrencyValue = (firstCurrencyValue * firstCurrencyRate / secondCurrencyRate).ToString("0.##");
+            }
+            else
+            {
+                SecondCurrencyValue = string.Empty;
             }
         }
         private void SetFirstCurrencyValue()
@@ -129,9 +133,13 @@ namespace WpfApp_CurrencyConverter
             var firstCurrencyRate = Currencies.Where(c => c.txt == FirstCurrencyName).Select(c => c.rate).FirstOrDefault();
             var secondCurrencyRate = Currencies.Where(c => c.txt == SecondCurrencyName).Select(c => c.rate).FirstOrDefault();
 
-            if (firstCurrencyRate != 0)
+            if (firstCurrencyRate != 0 && double.TryParse(SecondCurrencyValue, out double secondCurrencyValue))
             {
-                FirstCurrencyValue = secondCurrencyValue * secondCurrencyRate / firstCurrencyRate;
+                FirstCurrencyValue = (secondCurrencyValue * secondCurrencyRate / firstCurrencyRate).ToString("0.##");
+            }
+            else
+            {
+                FirstCurrencyValue = string.Empty;
             }
         }
     }
