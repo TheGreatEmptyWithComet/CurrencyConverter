@@ -5,37 +5,62 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp_CurrencyConverter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="400">
+        Title="Currency converter" Height="500" Width="400">
+    
     <Window.Resources>
+        <!-- Currency value TextBox style -->
         <Style TargetType="{x:Type TextBox}" x:Key="Style_CurrencyValueTextBox">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
+        <!-- Currency name ComboBox style -->
         <Style TargetType="{x:Type ComboBox}" x:Key="Style_CurrencyNameComboBox">
             <Setter Property="BorderThickness" Value="1 0 0 0"/>
         </Style>
+
+        <!-- Element's border style -->
+        <Style TargetType="{x:Type Border}" x:Key="Style_ElementsBorder_General">
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Style.Triggers>
+                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                    <Setter Property="BorderBrush" Value="Blue"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
     </Window.Resources>
 
-
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!-- Currency convertion part -->
         <StackPanel Orientation="Vertical" Grid.Row="0">
-            <DatePicker SelectedDate="{Binding Date, Mode=TwoWay}"
-                        SelectedDateFormat="Short"
-                        Width="100"/>
+            <!-- Date selection -->
+            <Border Margin="5 5 5 0" 
+                    Width="120"
+                    Style="{DynamicResource Style_ElementsBorder_General}">
+
+                <DatePicker SelectedDate="{Binding CurrencyRatesDate, Mode=TwoWay}"
+                            SelectedDateFormat="Short" 
+                            BorderThickness="0"/>
+            </Border>
 
             <!-- First currency -->
             <Border Margin="5 5 5 0" 
-                    Padding="2"
-                    CornerRadius="3"
-                    BorderThickness="1"
-                    BorderBrush="Gray">
-                <Grid >
+                    Style="{DynamicResource Style_ElementsBorder_General}">
+
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="30*"/>
                         <ColumnDefinition Width="70*"/>
@@ -53,59 +78,56 @@
                           SelectedValue="Українська гривня"
                           Grid.Column="1"/>
                 </Grid>
-
             </Border>
 
-
             <!-- Second currency -->
-            <Grid  Margin="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="30*"/>
-                    <ColumnDefinition Width="70*"/>
-                </Grid.ColumnDefinitions>
+            <Border Margin="5"
+                    Style="{DynamicResource Style_ElementsBorder_General}">
 
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30*"/>
+                        <ColumnDefinition Width="70*"/>
+                    </Grid.ColumnDefinitions>
 
-                <TextBox Text="{Binding SecondCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    <!-- Currency value -->
+                    <TextBox Text="{Binding SecondCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Style="{DynamicResource Style_CurrencyValueTextBox}"
                          Grid.Column="0"
                          x:Name="SecondCurrency_TextBox"
                          GotKeyboardFocus="SecondCurrency_TextBox_GotKeyboardFocus"
                          LostKeyboardFocus="SecondCurrency_TextBox_LostKeyboardFocus"/>
 
-                <ComboBox ItemsSource="{Binding CurrencyNames}"
+                    <!-- Currency name -->
+                    <ComboBox ItemsSource="{Binding CurrencyNames}"
                           SelectedItem="{Binding SecondCurrencyName, Mode=OneWayToSource}"
                           Style="{DynamicResource Style_CurrencyNameComboBox}"
                           SelectedValue="Євро"
                           Grid.Column="1"/>
-            </Grid>
-
+                </Grid>
+            </Border>
         </StackPanel>
 
-        <!--<ListView ItemsSource="{Binding Currencies}"
-                     Grid.Row="1">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Code" DisplayMemberBinding ="{Binding r030}" />
-                    <GridViewColumn Header="Title" DisplayMemberBinding ="{Binding txt}" />
-                    <GridViewColumn Header="Rate" DisplayMemberBinding ="{Binding rate}" />
-                    <GridViewColumn Header="Short name" DisplayMemberBinding ="{Binding cc}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>-->
+        <!-- List of all currency values -->
+        <Border Grid.Row="1"
+                Margin="5"
+                Style="{DynamicResource Style_ElementsBorder_General}">
 
-        <DataGrid ItemsSource="{Binding Currencies}" AutoGenerateColumns="False"
-                  Grid.Row="1"
-                  IsReadOnly="True"
-                  HorizontalGridLinesBrush="Azure"
-                  VerticalGridLinesBrush="Azure"
-                  HeadersVisibility="Column">
+            <DataGrid ItemsSource="{Binding Currencies}" AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      HorizontalGridLinesBrush="Azure"
+                      VerticalGridLinesBrush="LightGray"
+                      HeadersVisibility="Column"
+                      BorderThickness="0">
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Code" Binding="{Binding r030}"/>
-                <DataGridTextColumn Header="Title" Binding="{Binding txt}" Width="*"/>
-                <DataGridTextColumn Header="Rate" Binding="{Binding rate}"/>
-                <DataGridTextColumn Header="Short" Binding="{Binding cc}"/>
-            </DataGrid.Columns>
-        </DataGrid>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Code" Binding="{Binding r030}"/>
+                    <DataGridTextColumn Header="Title" Binding="{Binding txt}" Width="*"/>
+                    <DataGridTextColumn Header="Rate" Binding="{Binding rate}"/>
+                    <DataGridTextColumn Header="Short" Binding="{Binding cc}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+        
     </Grid>
 </Window>

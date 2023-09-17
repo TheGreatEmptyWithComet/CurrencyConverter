@@ -11,11 +11,22 @@ using Newtonsoft.Json;
 
 namespace WpfApp_CurrencyConverter
 {
+    // The app logic is designed to provide next main functionality:
+    // 1. Second currency value calculates automatically when
+    //      - first currency value is changed
+    //      - any of currencies name is changed
+    //      - date is changed
+    // 2. First currency value calculates automatically when second currency value is changed
+    // 3. Currency value fields must be clean when no data is entered
+    // 4. It should be possible to input a lot of decimal digits in the number while output value should contain only two ones
+
     public class CurrencyConverterVM : NotifyPropertyChangedHandler
     {
-        private string shortHref = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date=";
-        private string fullHref = string.Empty;
+        private string short_NBU_API_Href = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date=";
+        private string full_NBU_API_Href = string.Empty;
+         
         private bool secondCurrencyValueIsEdited = false;
+
         public ObservableCollection<Currency> Currencies { get; private set; } = new ObservableCollection<Currency>();
         public ObservableCollection<string> CurrencyNames { get; private set; } = new ObservableCollection<string>();
 
@@ -36,6 +47,7 @@ namespace WpfApp_CurrencyConverter
                 }
             }
         }
+
         private string secondCurrencyName;
         public string SecondCurrencyName
         {
@@ -61,7 +73,10 @@ namespace WpfApp_CurrencyConverter
                 {
                     firstCurrencyValue = value;
                     OnPropertyChanged(nameof(FirstCurrencyValue));
-                    SetSecondCurrencyValue();
+                    if (!secondCurrencyValueIsEdited)
+                    {
+                        SetSecondCurrencyValue();
+                    }
                 }
             }
         }
@@ -83,14 +98,14 @@ namespace WpfApp_CurrencyConverter
             }
         }
 
-        private DateTime date;
-        public DateTime Date
+        private DateTime currencyRatesDate;
+        public DateTime CurrencyRatesDate
         {
-            get { return date; }
+            get { return currencyRatesDate; }
             set
             {
-                date = value;
-                fullHref = shortHref + date.ToString("yyyyMMdd") + "&json";
+                currencyRatesDate = value;
+                full_NBU_API_Href = short_NBU_API_Href + currencyRatesDate.ToString("yyyyMMdd") + "&json";
                 LoadCurrencies();
                 OnPropertyChanged(nameof(Currencies));
                 InitCurrencyNamesList();
@@ -100,7 +115,7 @@ namespace WpfApp_CurrencyConverter
 
         public CurrencyConverterVM()
         {
-            Date = DateTime.Now;
+            CurrencyRatesDate = DateTime.Now;
             SetSecondCurrencyValueIsEdited = new RelayCommand(() => { secondCurrencyValueIsEdited = true; });
             UnsetSecondCurrencyValueIsEdited = new RelayCommand(() => { secondCurrencyValueIsEdited = false; });
         }
@@ -108,7 +123,7 @@ namespace WpfApp_CurrencyConverter
         private void LoadCurrencies()
         {
             WebClient webClient = new WebClient();
-            string currencyAsJson = webClient.DownloadString(fullHref);
+            string currencyAsJson = webClient.DownloadString(full_NBU_API_Href);
 
             var currencies = JsonConvert.DeserializeObject<List<Currency>>(currencyAsJson);
             if (currencies != null)
@@ -117,7 +132,7 @@ namespace WpfApp_CurrencyConverter
             }
 
             // Add UAH currency to the list
-            Currencies.Add(new Currency() { r030 = 980, txt = "Українська гривня", rate = 1, cc = "UAH", exchangedate = Date.ToString("d") });
+            Currencies.Add(new Currency() { r030 = 980, txt = "Українська гривня", rate = 1, cc = "UAH", exchangedate = CurrencyRatesDate.ToString("d") });
         }
         private void InitCurrencyNamesList()
         {
