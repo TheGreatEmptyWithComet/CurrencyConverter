@@ -8,39 +8,66 @@
         Title="MainWindow" Height="500" Width="400">
     <Window.Resources>
         <Style TargetType="{x:Type TextBox}" x:Key="Style_CurrencyValueTextBox">
-            <Setter Property="Width" Value="100"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
         <Style TargetType="{x:Type ComboBox}" x:Key="Style_CurrencyNameComboBox">
-            <Setter Property="Width" Value="200"/>
+            <Setter Property="BorderThickness" Value="1 0 0 0"/>
         </Style>
     </Window.Resources>
 
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20*"/>
-            <RowDefinition Height="80*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Vertical" Grid.Row="0">
             <DatePicker SelectedDate="{Binding Date, Mode=TwoWay}"
                         SelectedDateFormat="Short"
                         Width="100"/>
-            <StackPanel Orientation="Horizontal">
-                <TextBox Text="{Binding FirstCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{DynamicResource Style_CurrencyValueTextBox}"/>
 
+            <!-- First currency -->
+            <Border Margin="5 5 5 0" 
+                    Padding="2"
+                    CornerRadius="3"
+                    BorderThickness="1"
+                    BorderBrush="Gray">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30*"/>
+                        <ColumnDefinition Width="70*"/>
+                    </Grid.ColumnDefinitions>
 
-                <ComboBox ItemsSource="{Binding CurrencyNames}"
+                    <!-- Currency value -->
+                    <TextBox Text="{Binding FirstCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{DynamicResource Style_CurrencyValueTextBox}"
+                         Grid.Column="0"/>
+
+                    <!-- Currency name -->
+                    <ComboBox ItemsSource="{Binding CurrencyNames}"
                           SelectedItem="{Binding FirstCurrencyName, Mode=OneWayToSource}"
                           Style="{DynamicResource Style_CurrencyNameComboBox}"
-                          SelectedValue="Українська гривня"/>
-            </StackPanel>
+                          SelectedValue="Українська гривня"
+                          Grid.Column="1"/>
+                </Grid>
 
-            <StackPanel Orientation="Horizontal">
+            </Border>
+
+
+            <!-- Second currency -->
+            <Grid  Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30*"/>
+                    <ColumnDefinition Width="70*"/>
+                </Grid.ColumnDefinitions>
+
+
                 <TextBox Text="{Binding SecondCurrencyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Style="{DynamicResource Style_CurrencyValueTextBox}"
+                         Grid.Column="0"
                          x:Name="SecondCurrency_TextBox"
                          GotKeyboardFocus="SecondCurrency_TextBox_GotKeyboardFocus"
                          LostKeyboardFocus="SecondCurrency_TextBox_LostKeyboardFocus"/>
@@ -48,10 +75,12 @@
                 <ComboBox ItemsSource="{Binding CurrencyNames}"
                           SelectedItem="{Binding SecondCurrencyName, Mode=OneWayToSource}"
                           Style="{DynamicResource Style_CurrencyNameComboBox}"
-                          SelectedValue="Євро"/>
-            </StackPanel>
+                          SelectedValue="Євро"
+                          Grid.Column="1"/>
+            </Grid>
+
         </StackPanel>
-        
+
         <!--<ListView ItemsSource="{Binding Currencies}"
                      Grid.Row="1">
             <ListView.View>
